@@ -24,19 +24,19 @@ function createWindow () {
 
   win.on('close', (e) => {
     if (app.showExitPrompt) {
-      e.preventDefault() // Prevents the window from closing 
-      dialog.showMessageBox({
+      let ret = !!dialog.showMessageBox(win, {
           type: 'question',
           buttons: ['Yes', 'No'],
           title: 'Confirm',
           message: 'Unsaved data will be lost. Are you sure you want to quit?'
-      }, function (response) {
-          if (response === 0) { // Runs the following if 'Yes' is clicked
-              app.showExitPrompt = false
-              // Pas certains que cela soit la bonne façon de faire... -- JPM
-              win.destroy()
-          }
-      })
+      }).then(answer => {
+	    if (answer.response === 0) {
+            app.showExitPrompt = false
+            // Pas certains que cela soit la bonne façon de faire... -- JPM
+            win.destroy()
+		}
+	  })
+      e.preventDefault() // Prevents the window from closing 
     }
   })
 
